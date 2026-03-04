@@ -1,46 +1,66 @@
 import streamlit as st
 import google.generativeai as genai
 
-# --- CONFIG ---
-# Aapki nayi API Key bilkul sahi hai
+# API Config
 API_KEY = "AIzaSyCJjcVQx1SeuvefGZe-UiD3bc1eQKCOxDM"
 genai.configure(api_key=API_KEY)
 
-st.set_page_config(page_title="Professional AI Astro", page_icon="🔮")
+# Page Styling
+st.set_page_config(page_title="Chandan AI Hub", page_icon="🚀", layout="centered")
 
-st.title("🔮 Professional AI Astro")
-st.write("Aapka personal AI astrologer jo har sawal ka jawab deta hai.")
+# Custom CSS for better look
+st.markdown("""
+    <style>
+    .main { background-color: #f0f2f6; }
+    .stButton>button { width: 100%; border-radius: 20px; background-color: #4CAF50; color: white; }
+    </style>
+    """, unsafe_allow_html=True)
 
-name = st.text_input("Apna Naam Likhein:", value="Chandan kumar kakati")
-rashi = st.selectbox("Apni Rashi Chunein:", ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"])
+# Sidebar
+with st.sidebar:
+    st.image("https://cdn-icons-png.flaticon.com/512/4712/4712035.png", width=100) # Logo
+    st.title("Settings ⚙️")
+    language = st.selectbox("Language / ভাষা / भाषा", ["Assamese", "Bengali", "Hindi", "English", "Bodo"])
+    mode = st.radio("Service Type:", ["Astro Expert 🔮", "Coding Guru 💻", "Business & Marketing 📈"])
+    st.divider()
+    st.info("Developed by: Chandan Kumar Kakati")
 
-tab1, tab2 = st.tabs(["💬 AI Se Baat Karein", "💎 Premium Report"])
+st.title(f"🚀 {mode}")
+st.write(f"Hello Chandan! Aapka AI Assistant ab **{language}** mein taiyar hai.")
 
-with tab1:
-    user_ques = st.text_input("Apna sawal yahan likhein:")
-    if st.button("AI Se Jawab Payein"):
-        if user_ques:
-            with st.spinner('Grahon ki dasha check ho rahi hai...'):
-                try:
-                    # Is baar 'gemini-pro' use kar rahe hain, ye 100% chalega
-                    model = genai.GenerativeModel('gemini-pro')
-                    prompt = f"You are a Vedic Astrologer. A person named {name}, Rashi {rashi}, asks: {user_ques}. Give a positive and detailed answer in Hindi/Hinglish."
-                    response = model.generate_content(prompt)
-                    st.success("✨ AI Ka Jawab:")
-                    st.write(response.text)
-                except Exception as e:
-                    # Agar ab bhi error aaye toh ye line humein sahi wajah batayegi
-                    st.error("Dost, thoda intezar karein. Nayi API key activate hone mein 2-5 minute leti hai. Dobara click karein.")
-        else:
-            st.warning("Sawal toh puchiye!")
+# Input
+user_input = st.text_area("Aapka sawal yahan likhein:", placeholder="E.g. Coding sikhao ya bhavishya batao...")
 
-with tab2:
-    st.header("Premium Kundli Analysis")
-    st.write("Career aur Love life ki puri jankari. Fee: **₹49**")
-    upi_id = "my-astroai@ptaxis"
-    pay_url = f"upi://pay?pa={upi_id}&pn=Chandan&am=49&cu=INR"
-    st.markdown(f'<a href="{pay_url}" style="background-color:green; color:white; padding:12px; border-radius:10px; text-decoration:none; display:block; text-align:center; font-weight:bold;">📱 Pay via UPI</a>', unsafe_allow_html=True)
+if st.button("Generate Answer ✨"):
+    if user_input:
+        with st.spinner('AI Process Kar Raha Hai...'):
+            try:
+                model = genai.GenerativeModel('gemini-pro')
+                # Strict language instruction
+                prompt = f"Act as: {mode}. User: Chandan. Language: Strictly respond in {language}. Question: {user_input}."
+                response = model.generate_content(prompt)
+                
+                st.success(f"Response in {language}:")
+                full_text = response.text
+                st.write(full_text)
+                
+                # Voice Simulation (Google TTS)
+                audio_link = f"https://translate.google.com/translate_tts?ie=UTF-8&q={full_text[:200]}&tl=hi&client=tw-ob"
+                st.audio(audio_link, format="audio/mp3")
+                
+            except Exception as e:
+                st.error("Nayi API Key activate hone mein 2 min lagte hain. Phir se try karein!")
+    else:
+        st.warning("Kuch toh likhiye dost!")
 
+# Business Monetization
 st.divider()
-st.caption(f"Developed by {name} | Powered by Gemini Pro")
+col1, col2 = st.columns(2)
+with col1:
+    st.markdown("### 💎 Premium Plan")
+    st.write("Full Support: ₹199")
+with col2:
+    upi_id = "my-astroai@ptaxis"
+    st.markdown(f"[📱 Pay via UPI](upi://pay?pa={upi_id}&pn=Chandan&am=199)")
 
+st.caption("© 2026 Chandan Kumar Kakati | All Rights Reserved")
