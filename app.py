@@ -20,7 +20,7 @@ st.markdown("""
 with st.sidebar:
     st.image("https://cdn-icons-png.flaticon.com/512/4712/4712035.png", width=100) # Logo
     st.title("Settings ⚙️")
-    language = st.selectbox("Language / ভাষা / भाषा", ["Assamese", "Bengali", "Hindi", "English", "Bodo"])
+    language = st.selectbox("Language / ভাষা / भाषा", ["Assamese", "Bengali", "Hindi", "English", "Bodo", "Hinglish"])
     mode = st.radio("Service Type:", ["Astro Expert 🔮", "Coding Guru 💻", "Business & Marketing 📈"])
     st.divider()
     st.info("Developed by: Chandan Kumar Kakati")
