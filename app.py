@@ -1,48 +1,65 @@
 import streamlit as st
+import google.generativeai as genai
 
-# --- PAGE SETUP ---
-st.set_page_config(page_title="My Professional AI Astro", page_icon="🔮")
+# --- CONFIGURATION ---
+# Aapki API Key yahan set ho gayi hai
+genai.configure(api_key="AIzaSyC9MEeWKiOx_zEZoVeD-0cM1vAIL3XqZmI")
+model = genai.GenerativeModel('gemini-pro')
 
-# --- CUSTOM CSS FOR MOBILE LOOK ---
+st.set_page_config(page_title="My AI Astro Professional", page_icon="🔮")
+
+# --- CUSTOM CSS ---
 st.markdown("""
     <style>
-    .stButton>button { width: 100%; border-radius: 20px; height: 3em; background-color: #FF4B4B; color: white; }
-    .main { background-color: #f5f7f9; }
+    .stButton>button { width: 100%; border-radius: 10px; background-color: #FF4B4B; color: white; font-weight: bold; }
+    .pay-button { background-color: #28a745; color: white; padding: 12px; text-align: center; border-radius: 10px; display: block; text-decoration: none; font-weight: bold; margin-bottom: 20px; }
     </style>
     """, unsafe_allow_html=True)
 
-st.title("🌟 My Professional AI Astro")
-st.write("Aapka personal AI astrologer, hamesha aapke saath.")
+st.title("🔮 My Professional AI Astro")
+st.write("Aapka personal AI astrologer jo har sawal ka jawab deta hai.")
 
 # --- USER INPUT ---
 name = st.text_input("Apna Naam Likhein:")
 rashi = st.selectbox("Apni Rashi Chunein:", ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"])
 
-# --- SECTIONS ---
-tab1, tab2 = st.tabs(["🆓 Free Rashifal", "💎 Paid Kundli Report"])
+tab1, tab2 = st.tabs(["💬 AI Se Baat Karein", "💎 Premium Report"])
 
 with tab1:
-    if st.button("Aaj ka Rashifal Dekhein"):
-        if name:
-            st.success(f"Dost {name}, aaj ki {rashi} rashi ke mutabik aapko naye financial mauke mil sakte hain. Mehnat jari rakhein!")
+    user_ques = st.text_input("Apna sawal yahan likhein (e.g. Meri shadi kab hogi?):")
+    if st.button("AI Se Jawab Payein"):
+        if user_ques and name:
+            with st.spinner('AI Grahon ki dasha check kar raha hai...'):
+                try:
+                    prompt = f"You are a professional astrologer. A person named {name} with rashi {rashi} is asking: {user_ques}. Give a friendly and helpful answer in Hindi (Hinglish mix)."
+                    response = model.generate_content(prompt)
+                    st.markdown(f"### ✨ AI Ka Jawab:")
+                    st.write(response.text)
+                except Exception as e:
+                    st.error("AI thoda busy hai, dobara koshish karein!")
         else:
-            st.warning("Pehle apna naam likhein.")
+            st.warning("Pehle naam aur sawal dono likhein, dost!")
 
 with tab2:
-    st.info("Iss feature mein AI aapki poori kundli aur career analysis karega.")
-    st.write("💰 **Charge: Sirf ₹49**")
+    st.header("Premium Kundli Analysis")
+    st.write("Career, Health aur Love life ki puri jankari ke liye report unlock karein.")
+    st.write("💰 **Fee: Sirf ₹49**")
     
-    # Yahan aap apna Payment Link (GPay/PhonePe/Razorpay) dal sakte hain
-    st.markdown("[👉 Yahan Se Payment Karein (Click Here)](#)")
+    # Updated UPI Link for Chandan Kakati
+    upi_id = "my-astroai@ptaxis"
+    pay_url = f"upi://pay?pa={upi_id}&pn=ChandanKakati&am=49&cu=INR"
     
-    transaction_id = st.text_input("Payment ke baad Transaction ID yahan likhein:")
+    st.markdown(f'<a href="{pay_url}" class="pay-button">📱 PhonePe/GPay Se Pay Karein</a>', unsafe_allow_html=True)
     
-    if st.button("Unlock Paid Report"):
-        if len(transaction_id) > 5:
-            st.success("Verification Successful! Aapki AI Report niche di gayi hai...")
-            st.write("AI Analysis: Aapke grah batate hain ki aap ek bade tech project mein safal honge.")
+    txn = st.text_input("Payment ke baad Transaction ID (12 digits) yahan likhein:")
+    if st.button("Report Unlock Karein"):
+        if len(txn) >= 10:
+            st.success("✅ Payment Verify Ho Gayi! Aapki detailed report niche hai...")
+            st.write("### 💎 Aapka Premium Analysis:")
+            st.write(f"Dost {name}, aapke sitare batate hain ki aap ek bahut bade digital project mein safal honge. Mehnat jari rakhein!")
         else:
             st.error("Sahi Transaction ID darj karein.")
 
 st.divider()
-st.caption("Developed by Dildar Hussain | Powered by AI")
+st.caption("Developed by Chandan Kakati | Powered by Google AI")
+
