@@ -26,7 +26,7 @@ with st.sidebar:
     st.info("Developed by: Chandan Kumar Kakati")
 
 st.title(f"🚀 {mode}")
-st.write(f"Hello Chandan! Aapka AI Assistant ab **{language}** mein taiyar hai.")
+st.write(f"Hello Dost! Aapka AI Assistant ab **{language}** mein taiyar hai.")
 
 # Input
 user_input = st.text_area("Aapka sawal yahan likhein:", placeholder="E.g. Coding sikhao ya bhavishya batao...")
